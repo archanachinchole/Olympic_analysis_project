@@ -49,3 +49,33 @@ def country_year_list(df):
     country.insert(0, 'overall')
 
     return years, country
+
+
+def Participating_nation_over_time(df):
+    Nation_over_time = df.drop_duplicates(['Year', 'region'])['Year'].value_counts().reset_index().sort_values('Year')
+    Nation_over_time.rename(columns={'No. of Countries': 'Year', 'count': 'No. of Countries'}, inplace=True)
+
+    return Nation_over_time
+def data_over_time(df, column):
+    data_over_time = df.drop_duplicates(['Year', column])['Year'].value_counts().reset_index().sort_values('Year')
+    data_over_time.rename(columns={'Year': 'No. of ' + column}, inplace=True)
+
+    return data_over_time
+
+def athletes_over_time(df, column):
+    athletes_over_time = df.drop_duplicates(['Year', column])['Year'].value_counts().reset_index().sort_values('Year')
+    athletes_over_time.rename(columns={'Year': 'No. of ' + column}, inplace=True)
+
+    return data_over_time
+
+
+def most_successful(df, sport):
+    temp_df = df.dropna(subset=['Medal'])
+
+    if sport != 'overall':
+        temp_df = temp_df[temp_df['Sport'] == sport]
+
+    x = temp_df['Name'].value_counts().reset_index().head(15).merge(df, left_on='Name', right_on='Name', how='left')[
+        ['Name', 'Sport', 'region']].drop_duplicates('Name')
+    return x
+
